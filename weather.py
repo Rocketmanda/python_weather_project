@@ -5,15 +5,15 @@ DEGREE_SYMBOL = u"\N{DEGREE SIGN}C"
 
 
 def format_temperature(temp):
-    """Takes a temperature and returns it in string format with the degrees
-        and Celsius symbols.
+    """Formats the temperature to include a degree symbol and one decimal place.
 
     Args:
-        temp: A string representing a temperature.
+        temp: A float representing the temperature.
     Returns:
-        A string containing the temperature and "degrees Celsius."
+        A string containing the formatted temperature.
     """
-    return f"{temp}{DEGREE_SYMBOL}"
+    return f"{round(temp, 1)}°C"
+
 
 
 def convert_date(iso_string):
@@ -29,13 +29,8 @@ def convert_date(iso_string):
 
 
 def convert_f_to_c(temp_in_fahrenheit):
-    """Converts a temperature from Fahrenheit to Celsius.
-
-    Args:
-        temp_in_fahrenheit: float representing a temperature.
-    Returns:
-        A float representing a temperature in degrees Celsius, rounded to 1 decimal place.
-    """
+    if temp_in_fahrenheit is None or temp_in_fahrenheit == "":
+        return None
     temp_in_celsius = (float(temp_in_fahrenheit) - 32) * 5 / 9
     return round(temp_in_celsius, 1)
 
@@ -76,9 +71,9 @@ def load_data_from_csv(csv_file):
                     pass
     return data
 
-csv_file = '/Users/manda/Documents/She-Codes-Plus/Python_She_Codes/python_weather_project/tests/data/example_one.csv'
-result = load_data_from_csv(csv_file)
-print(result)
+# csv_file = '/Users/manda/Documents/She-Codes-Plus/Python_She_Codes/python_weather_project/tests/data/example_one.csv'
+# result = load_data_from_csv(csv_file)
+# print(result)
 
 def find_min(temperatures):
     if not temperatures:
@@ -97,8 +92,6 @@ def find_min(temperatures):
             continue
 
     return min_temperature, min_index
-
-
 
 def find_max(temperatures):
     if not temperatures:
@@ -126,13 +119,23 @@ def generate_summary(weather_data):
     Returns:
         A string containing the summary information.
     """
-    summary = ""
-    for day_data in weather_data:
-        date = convert_date(day_data[0])
-        min_temp = convert_f_to_c(float(day_data[1]))
-        max_temp = convert_f_to_c(float(day_data[2]))
-        summary += f"On {date}, the minimum temperature was {format_temperature(min_temp)} and the maximum temperature was {format_temperature(max_temp)}.\n"
-    return summary
+    list_min = []
+    for day in weather_data:
+        list_min.append(day[1])
+
+    list_max = []
+    for day in weather_data:
+        list_max.append(day[2])
+
+    summary = "5 Day Overview\n"
+    for day in weather_data:
+        summary += f"  Date: {convert_date(day[0])}\n"
+        summary += f"  The lowest temperature will be {convert_f_to_c(day[1])}°C, and will occur on {convert_date(day[0])}.\n"
+        summary += f"  The highest temperature will be {convert_f_to_c(day[2])}°C, and will occur on {convert_date(day[0])}.\n"
+        summary += f"  The average low this week is {convert_f_to_c(calculate_mean(list_min)):.1f}°C.\n"
+        summary += f"  The average high this week is {convert_f_to_c(calculate_mean(list_max)):.1f}°C.\n\n"
+    return summary.strip()
+
 
 
 def generate_daily_summary(weather_data):
@@ -143,11 +146,5 @@ def generate_daily_summary(weather_data):
     Returns:
         A string containing the summary information.
     """
-    summary = ""
-    for day_data in weather_data:
-        date = convert_date(day_data[0])
-        min_temp = convert_f_to_c(float(day_data[1]))
-        max_temp = convert_f_to_c(float(day_data[2]))
-        mean_temp = convert_f_to_c(calculate_mean([float(day_data[1]), float(day_data[2])]))
-        summary += f"On {date}, the minimum temperature was {format_temperature(min_temp)}, the maximum temperature was {format_temperature(max_temp)}, and the mean temperature was {format_temperature(mean_temp)}.\n"
-    return summary
+    pass
+
