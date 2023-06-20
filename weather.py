@@ -64,9 +64,9 @@ def load_data_from_csv(csv_file):
     data = []
     with open(csv_file, "r") as file:
         reader = csv.reader(file)
-        next(reader) 
+        next(reader)  # Skip the header row
         for row in reader:
-            if len(row) == 3: 
+            if len(row) == 3:  # Ensure each row has three columns
                 date = row[0]
                 try:
                     min_temp = int(row[1])
@@ -76,37 +76,47 @@ def load_data_from_csv(csv_file):
                     pass
     return data
 
+csv_file = '/Users/manda/Documents/She-Codes-Plus/Python_She_Codes/python_weather_project/tests/data/example_one.csv'
+result = load_data_from_csv(csv_file)
+print(result)
+
+def find_min(temperatures):
+    if not temperatures:
+        return ()
+    
+    min_temperature = None
+    min_index = None
+
+    for index, temperature in enumerate(temperatures):
+        try:
+            temperature = float(temperature)
+            if min_temperature is None or temperature <= min_temperature:
+                min_temperature = temperature
+                min_index = index
+        except ValueError:
+            continue
+
+    return min_temperature, min_index
 
 
-def find_min(weather_data):
-    """Calculates the minimum value in a list of numbers.
 
-    Args:
-        weather_data: A list of numbers.
-    Returns:
-        The minimum value and its position in the list as a tuple: (minimum value, position).
-    """
-    if not weather_data:
-        return None, None
-    min_value = min(weather_data)
-    min_index = weather_data.index(min_value)
-    return min_value, min_index
+def find_max(temperatures):
+    if not temperatures:
+        return ()
 
+    max_temperature = None
+    max_index = None
 
-def find_max(weather_data):
-    """Calculates the maximum value in a list of numbers.
+    for index, temperature in enumerate(temperatures):
+        try:
+            temperature = float(temperature)
+            if max_temperature is None or temperature >= max_temperature:
+                max_temperature = temperature
+                max_index = index
+        except ValueError:
+            continue
 
-    Args:
-        weather_data: A list of numbers.
-    Returns:
-        The maximum value and its position in the list as a tuple: (maximum value, position).
-    """
-    if not weather_data:
-        return None, None
-    max_value = max(weather_data)
-    max_index = weather_data.index(max_value)
-    return max_value, max_index
-
+    return max_temperature, max_index
 
 def generate_summary(weather_data):
     """Outputs a summary for the given weather data.
